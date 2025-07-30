@@ -1,4 +1,4 @@
-# wartsila-project
+# Survey-Creation-2
 
 This is a survey creation app currently meant to create personal surveys to record and track data of your choice.
 
