@@ -1,5 +1,6 @@
 // Models/ResponseDtos.cs -> mapping JSON payloads to C# DTOs
-// this is the response data
+// models for response submissions/updates
+// this is pure input binding, AnswerRequest is reused in both inputs
 using System.Text.Json.Serialization;
 
 namespace SurveyApi.Models;

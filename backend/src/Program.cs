@@ -1,9 +1,9 @@
 // Program.cs -> equivalent to index.ts in typescript
 // the appsettings.json file is also meant to work with this
 using System.Data;
+using System.Text;
 using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using MySqlConnector;
 
@@ -32,18 +32,28 @@ builder.Services.AddScoped<IDbConnection>(sp =>
     return new MySqlConnection(connectionString);
 });
 
-// TODO: configure JWT auth to match your existing tokens
+// JWT auth
+var jwtSecret = builder.Configuration["JWT_SECRET"];
+if (string.IsNullOrEmpty(jwtSecret))
+{
+    throw new Exception("JWT_SECRET environment variable is not set.");
+}
+
+var keyBytes = Encoding.UTF8.GetBytes(jwtSecret);
+var signingKey = new SymmetricSecurityKey(keyBytes);
+
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            // Fill these in to match your auth.routes.ts token issuing logic
             ValidateIssuer = false,
             ValidateAudience = false,
             ValidateIssuerSigningKey = true,
-            // IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_here")),
+            IssuerSigningKey = signingKey,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero // match Node closer
         };
     });
 

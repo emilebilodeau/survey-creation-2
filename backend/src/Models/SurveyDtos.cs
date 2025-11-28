@@ -1,5 +1,8 @@
 // Models/SurveyDtos.cs -> mapping JSON payloads to C# DTOs
-// this is the survey data
+// models for creating and reading surveys
+// contains both input binding and output binding
+// CreateSurveyRequest, CreateQuestionRequest: input
+// SuverySummaryDto & SurveyDto: output
 using System.Text.Json.Serialization;
 
 namespace SurveyApi.Models;
